@@ -1,5 +1,7 @@
 package uk.ac.herts.SmartLab.XBee.Device;
 
+import uk.ac.herts.SmartLab.XBee.Response.ICommandResponse;
+
 public class Address {
 	public static final Address BROADCAST_ZIGBEE = new Address(0x00000000,
 			0x0000FFFF, 0xFFFE);
@@ -93,21 +95,29 @@ public class Address {
 	// / </summary>
 	// / <param name="response">muset be non null parameter</param>
 	// / <returns></returns>
-	/*
-	 * public static Address Parse(ICommandResponse response) { byte[] message =
-	 * response.GetParameter(); if (message != null) if
-	 * (response.GetRequestCommand().ToString().ToUpper() == "ND") { Address
-	 * device = new Address();
-	 * 
-	 * device.value[0] = message[2]; device.value[1] = message[3];
-	 * device.value[2] = message[4]; device.value[3] = message[5];
-	 * device.value[4] = message[6]; device.value[5] = message[7];
-	 * device.value[6] = message[8]; device.value[7] = message[9];
-	 * 
-	 * device.value[8] = message[0]; device.value[9] = message[1];
-	 * 
-	 * return device; } return null; }
-	 */
+
+	public static Address Parse(ICommandResponse response) {
+		byte[] message = response.GetParameter();
+		if (message != null)
+			if (response.GetRequestCommand().toString().equalsIgnoreCase("ND")) {
+				Address device = new Address();
+
+				device.value[0] = message[2];
+				device.value[1] = message[3];
+				device.value[2] = message[4];
+				device.value[3] = message[5];
+				device.value[4] = message[6];
+				device.value[5] = message[7];
+				device.value[6] = message[8];
+				device.value[7] = message[9];
+
+				device.value[8] = message[0];
+				device.value[9] = message[1];
+
+				return device;
+			}
+		return null;
+	}
 
 	@Override
 	public boolean equals(Object obj) {

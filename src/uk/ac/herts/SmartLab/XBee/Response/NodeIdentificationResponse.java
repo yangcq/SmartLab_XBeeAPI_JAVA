@@ -44,7 +44,7 @@ public class NodeIdentificationResponse extends ZigBeeRxBase {
 		byte[] data = new byte[10];
 		System.arraycopy(this.GetFrameData(), 14, data, 0, 8);
 		data[8] = this.GetFrameData()[12];
-		data[8] = this.GetFrameData()[13];
+		data[9] = this.GetFrameData()[13];
 		return new Address(data);
 	}
 

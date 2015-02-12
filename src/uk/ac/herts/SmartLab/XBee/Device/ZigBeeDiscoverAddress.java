@@ -1,5 +1,6 @@
 ﻿package uk.ac.herts.SmartLab.XBee.Device;
 
+import uk.ac.herts.SmartLab.XBee.Response.ICommandResponse;
 import uk.ac.herts.SmartLab.XBee.Type.DeviceType;
 
     public class ZigBeeDiscoverAddress extends XBeeDiscoverAddress
@@ -33,13 +34,13 @@ import uk.ac.herts.SmartLab.XBee.Type.DeviceType;
         /// </summary>
         /// <param name="response">muset be non null parameter</param>
         /// <returns></returns>
-        /*public static new ZigBeeDiscoverAddress Parse(ICommandResponse response)
+        public static ZigBeeDiscoverAddress Parse(ICommandResponse response)
         {
             byte[] message = response.GetParameter();
             if (message != null)
-                if (response.GetRequestCommand().ToString().ToUpper() == "ND")
+                if (response.GetRequestCommand().toString().equalsIgnoreCase("ND"))
                 {
-                    int offset = message.Length - 8;
+                    int offset = message.length - 8;
                     ZigBeeDiscoverAddress device = new ZigBeeDiscoverAddress();
 
                     device.value[0] = message[2];
@@ -54,16 +55,11 @@ import uk.ac.herts.SmartLab.XBee.Type.DeviceType;
                     device.value[8] = message[0];
                     device.value[9] = message[1];
 
-                    try
-                    {
-                        device.NIString = new string(UTF8Encoding.UTF8.GetChars(message.ExtractRangeFromArray(10, message.Length - 18)));
-                    }
-                    catch { device.NIString = "error while encoding"; }
-
-                    device.zigbeeAdditional = message.ExtractRangeFromArray(offset, 8);
+                    device.NIString = new String(message, 10, message.length - 18);
+                    System.arraycopy(message, offset, device.zigbeeAdditional, 0, 8);
 
                     return device;
                 }
             return null;
-        }*/
+        }
     }
