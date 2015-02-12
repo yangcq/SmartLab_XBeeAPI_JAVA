@@ -1,0 +1,79 @@
+package uk.ac.herts.SmartLab.XBee.Status;
+
+public enum ModemStatus {
+	HARDWARE_RESET, // = 0x00,
+	WATCHDOG_TIMER_RESET, // = 0x01,
+	JOINED_NETWORK, // = 0x02,
+	DISASSOCIATED, // = 0x03,
+
+	CONFIGURATION_ERROR, // = 0x04,
+	COORDINATOR_REALIGNMENT, // = 0x05,
+
+	COORDINATOR_START, // = 0x06,
+	NETWORK_SECURITY_KEY_WAS_UPDATED, // = 0x07,
+
+	NETWORK_WOKE_UP, // = 0x0B,
+	NETWORK_WENT_TO_SLEEP, // = 0x0C,
+
+	VOLTAGE_SPPLY_LIMIT_EXCEEDED, // = 0x0D,
+	MODEM_CONFIGURATION_CHANGED_WHILE_JOIN_IN_PRIGRESS, // = 0x11,
+
+	// 0x80+ STACK_ERROR
+	STACK_ERROR, // = 0x80,
+
+	SEND_JOIN_ISSIED_WITHOUT_CONNECTING_AP, // = 0x82,
+	ACCESS_POINT_NOT_FOUND, // = 0x83,
+	PSK_NOT_FOUND, // = 0x84,
+	SSID_NOT_FOUND, // = 0x87,
+
+	FAILED_TO_JOIN_WITH_SECURITY_ENABLED, // = 0x88,
+	INVALID_CHANNEL, // = 0x8A,
+	FAILED_TO_JOIN_ACCESS_POINT;// = 0x8E,
+
+	public static ModemStatus parse(int value) {
+		switch (value) {
+		case 0x00:
+			return HARDWARE_RESET;
+		case 0x01:
+			return WATCHDOG_TIMER_RESET;
+		case 0x02:
+			return JOINED_NETWORK;
+		case 0x03:
+			return DISASSOCIATED;
+		case 0x04:
+			return CONFIGURATION_ERROR;
+		case 0x05:
+			return COORDINATOR_REALIGNMENT;
+		case 0x06:
+			return COORDINATOR_START;
+		case 0x07:
+			return NETWORK_SECURITY_KEY_WAS_UPDATED;
+		case 0x0B:
+			return NETWORK_WOKE_UP;
+		case 0x0C:
+			return NETWORK_WENT_TO_SLEEP;
+		case 0x0D:
+			return VOLTAGE_SPPLY_LIMIT_EXCEEDED;
+		case 0x11:
+			return MODEM_CONFIGURATION_CHANGED_WHILE_JOIN_IN_PRIGRESS;
+		case 0x80:
+			return STACK_ERROR;
+		case 0x82:
+			return SEND_JOIN_ISSIED_WITHOUT_CONNECTING_AP;
+		case 0x83:
+			return ACCESS_POINT_NOT_FOUND;
+		case 0x84:
+			return PSK_NOT_FOUND;
+		case 0x87:
+			return SSID_NOT_FOUND;
+		case 0x88:
+			return FAILED_TO_JOIN_WITH_SECURITY_ENABLED;
+		case 0x8A:
+			return INVALID_CHANNEL;
+		case 0x8E:
+			return FAILED_TO_JOIN_ACCESS_POINT;
+		default:
+			return STACK_ERROR;
+		}
+	}
+}
