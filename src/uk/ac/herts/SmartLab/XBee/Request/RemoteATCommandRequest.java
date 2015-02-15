@@ -32,7 +32,6 @@ public class RemoteATCommandRequest extends CommandRequestBase {
 			int parameterOffset, int parameterLength) {
 		super(13 + (parameter == null ? 0 : parameter.length),
 				API_IDENTIFIER.Remote_Command_Request, frameID);
-
 		this.SetContent(remoteAddress.GetAddressValue());
 		this.SetContent(transmitOptions.GetValue());
 		this.SetContent(command.GetValue());

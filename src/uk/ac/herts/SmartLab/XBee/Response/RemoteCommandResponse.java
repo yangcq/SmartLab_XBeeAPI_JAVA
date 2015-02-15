@@ -18,40 +18,39 @@ public class RemoteCommandResponse extends CommandResponseBase {
 
 	@Override
 	public CommandStatus GetCommandStatus() {
-		return CommandStatus.parse(this.GetFrameData()[14]);
+		return CommandStatus.parse(this.GetFrameData()[14] & 0xFF);
+	}
+
+	public Address GetRemoteDevice() {
+		byte[] cache = new byte[10];
+		System.arraycopy(this.GetFrameData(), 2, cache, 0, 10);
+		return new Address(cache);
 	}
 
 	@Override
 	public byte[] GetParameter() {
-		int len = this.GetParameterLength();
-		if (len > 15) {
-			byte[] data = new byte[len];
-			System.arraycopy(this.GetFrameData(), 15, data, 0, len);
-			return data;
-		} else
+		int length = this.GetParameterLength();
+
+		if (length <= 0)
 			return null;
+
+		byte[] cache = new byte[length];
+		System.arraycopy(this.GetFrameData(), 15, cache, 0, length);
+		return cache;
 	}
 
-	public Address GetRemoteDevice() {
-		byte[] data = new byte[10];
-		System.arraycopy(this.GetFrameData(), 2, data, 0, 10);
-		return new Address(data);
+	@Override
+	public byte GetParameter(int index) {
+		return this.GetFrameData()[15 + index];
+	}
+
+	@Override
+	public int GetParameterLength() {
+		return this.GetPosition() - 15;
 	}
 
 	@Override
 	public int GetParameterOffset() {
 		return 15;
-	}
-
-	@Override
-	public int GetParameterLength() {
-		// TODO Auto-generated method stub
-		return this.GetPosition() - 15;
-	}
-
-	@Override
-	public byte GetParameter(int index) {
-		// TODO Auto-generated method stub
-		return this.GetFrameData()[15 + index];
 	}
 }

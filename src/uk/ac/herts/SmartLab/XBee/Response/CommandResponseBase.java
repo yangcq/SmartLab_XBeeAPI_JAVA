@@ -4,8 +4,7 @@ import uk.ac.herts.SmartLab.XBee.APIFrame;
 import uk.ac.herts.SmartLab.XBee.Status.CommandStatus;
 import uk.ac.herts.SmartLab.XBee.Type.ATCommand;
 
-public abstract class CommandResponseBase extends ResponseBase implements
-		ICommandResponse {
+public abstract class CommandResponseBase extends RxBase {
 	public CommandResponseBase(APIFrame frame) {
 		super(frame);
 	}
@@ -19,4 +18,10 @@ public abstract class CommandResponseBase extends ResponseBase implements
 	public abstract CommandStatus GetCommandStatus();
 
 	public abstract byte[] GetParameter();
+
+	public abstract byte GetParameter(int index);
+
+	public abstract int GetParameterLength();
+
+	public abstract int GetParameterOffset();
 }

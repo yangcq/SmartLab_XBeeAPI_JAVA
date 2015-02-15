@@ -4,8 +4,8 @@ import uk.ac.herts.SmartLab.XBee.Device.Address;
 import uk.ac.herts.SmartLab.XBee.Options.OptionsBase;
 import uk.ac.herts.SmartLab.XBee.Type.API_IDENTIFIER;
 
-public abstract class TxRequestBase extends RequestBase implements ITx {
-	public TxRequestBase(int length, API_IDENTIFIER identifier, int frameID) {
+public abstract class TxPayloadBase extends TxBase {
+	public TxPayloadBase(int length, API_IDENTIFIER identifier, int frameID) {
 		super(length, identifier, frameID);
 	}
 

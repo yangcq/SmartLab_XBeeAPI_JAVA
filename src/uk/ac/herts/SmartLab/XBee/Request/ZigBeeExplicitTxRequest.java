@@ -5,7 +5,7 @@ import uk.ac.herts.SmartLab.XBee.Device.ExplicitAddress;
 import uk.ac.herts.SmartLab.XBee.Options.OptionsBase;
 import uk.ac.herts.SmartLab.XBee.Type.API_IDENTIFIER;
 
-public class ZigBeeExplicitTxRequest extends TxRequestBase {
+public class ZigBeeExplicitTxRequest extends TxPayloadBase {
 	// 0x11
 	// FrameID;
 	// ExplicitRemoteDevice
@@ -18,9 +18,7 @@ public class ZigBeeExplicitTxRequest extends TxRequestBase {
 	// RF_Data;
 
 	public ZigBeeExplicitTxRequest(int frameID, ExplicitAddress remoteAddress,
-			OptionsBase transmitOptions, byte[] payload)
-
-	{
+			OptionsBase transmitOptions, byte[] payload) {
 		this(frameID, remoteAddress, transmitOptions, payload, 0,
 				payload.length);
 	}
@@ -30,7 +28,6 @@ public class ZigBeeExplicitTxRequest extends TxRequestBase {
 		super(18 + payload.length,
 				API_IDENTIFIER.Explicit_Addressing_ZigBee_Command_Frame,
 				frameID);
-
 		this.SetContent(remoteAddress.GetAddressValue());
 		this.SetContent(remoteAddress.GetExplicitValue());
 		this.SetContent((byte) 0x00);

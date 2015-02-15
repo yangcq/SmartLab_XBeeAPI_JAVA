@@ -4,29 +4,21 @@ import uk.ac.herts.SmartLab.XBee.APIFrame;
 import uk.ac.herts.SmartLab.XBee.Device.Address;
 import uk.ac.herts.SmartLab.XBee.Status.ReceiveStatus;
 
-public class ZigBeeRxResponse extends ZigBeeRxBase {
+public class ZigBeeRxResponse extends RxPayloadBase {
 	public ZigBeeRxResponse(APIFrame frame) {
 		super(frame);
 	}
 
 	@Override
-	public ReceiveStatus GetReceiveStatus() {
-		return ReceiveStatus.parse(this.GetFrameData()[11]);
-	}
-
-	@Override
 	public byte[] GetReceivedData() {
-		int len = this.GetReceivedDataLength();
-		byte[] data = new byte[len];
-		System.arraycopy(this.GetFrameData(), 12, data, 0, len);
-		return data;
-	}
+		int length = this.GetReceivedDataLength();
 
-	@Override
-	public Address GetRemoteDevice() {
-		byte[] data = new byte[10];
-		System.arraycopy(this.GetFrameData(), 1, data, 0, 10);
-		return new Address(data);
+		if (length <= 0)
+			return null;
+
+		byte[] cache = new byte[length];
+		System.arraycopy(this.GetFrameData(), 12, cache, 0, length);
+		return cache;
 	}
 
 	@Override
@@ -35,14 +27,25 @@ public class ZigBeeRxResponse extends ZigBeeRxBase {
 	}
 
 	@Override
+	public byte GetReceivedData(int index) {
+		return this.GetFrameData()[12 + index];
+	}
+
+	@Override
 	public int GetReceivedDataLength() {
-		// TODO Auto-generated method stub
 		return this.GetPosition() - 12;
 	}
 
 	@Override
-	public byte GetReceivedData(int index) {
-		// TODO Auto-generated method stub
-		return this.GetFrameData()[12 + index];
+	public ReceiveStatus GetReceiveStatus() {
+		return ReceiveStatus.parse(this.GetFrameData()[11] & 0xFF);
 	}
+
+	@Override
+	public Address GetRemoteDevice() {
+		byte[] cache = new byte[10];
+		System.arraycopy(this.GetFrameData(), 1, cache, 0, 10);
+		return new Address(cache);
+	}
+
 }

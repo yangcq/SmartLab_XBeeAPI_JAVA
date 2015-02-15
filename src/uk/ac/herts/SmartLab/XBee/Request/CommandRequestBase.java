@@ -3,7 +3,7 @@ package uk.ac.herts.SmartLab.XBee.Request;
 import uk.ac.herts.SmartLab.XBee.Type.API_IDENTIFIER;
 import uk.ac.herts.SmartLab.XBee.Type.ATCommand;
 
-public abstract class CommandRequestBase extends RequestBase {
+public abstract class CommandRequestBase extends TxBase {
 	public CommandRequestBase(int length, API_IDENTIFIER identifier,
 			int FrameID) {
 		super(length, identifier, FrameID);

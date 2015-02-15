@@ -5,47 +5,23 @@ import uk.ac.herts.SmartLab.XBee.Device.Address;
 import uk.ac.herts.SmartLab.XBee.Status.ReceiveStatus;
 import uk.ac.herts.SmartLab.XBee.Type.OneWireSensor;
 
-public class SensorReadResponse extends ZigBeeRxBase {
+public class SensorReadResponse extends RxBase {
 	public SensorReadResponse(APIFrame frame) {
 		super(frame);
 	}
 
-	@Override
-	public int GetReceivedDataOffset() {
-		return -1;
-	}
-
-	@Override
-	public int GetReceivedDataLength() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public byte GetReceivedData(int index) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public byte[] GetReceivedData() {
-		return null;
-	}
-
-	@Override
 	public Address GetRemoteDevice() {
-		byte[] data = new byte[10];
-		System.arraycopy(this.GetFrameData(), 1, data, 0, 10);
-		return new Address(data);
+		byte[] cache = new byte[10];
+		System.arraycopy(this.GetFrameData(), 1, cache, 0, 10);
+		return new Address(cache);
 	}
 
-	@Override
 	public ReceiveStatus GetReceiveStatus() {
-		return ReceiveStatus.parse(this.GetFrameData()[11]);
+		return ReceiveStatus.parse(this.GetFrameData()[11] & 0xFF);
 	}
 
 	public OneWireSensor GetOneWireSensor() {
-		return OneWireSensor.parse(this.GetFrameData()[12]);
+		return OneWireSensor.parse(this.GetFrameData()[12] & 0xFF);
 	}
 
 	public int GetAD0() {

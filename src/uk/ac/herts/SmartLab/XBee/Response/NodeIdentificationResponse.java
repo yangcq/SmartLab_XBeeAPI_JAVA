@@ -6,7 +6,7 @@ import uk.ac.herts.SmartLab.XBee.Status.ReceiveStatus;
 import uk.ac.herts.SmartLab.XBee.Type.DeviceType;
 import uk.ac.herts.SmartLab.XBee.Type.SourceEvent;
 
-public class NodeIdentificationResponse extends ZigBeeRxBase {
+public class NodeIdentificationResponse extends RxBase {
 	private int offset = 0;
 
 	public NodeIdentificationResponse(APIFrame frame) {
@@ -14,48 +14,31 @@ public class NodeIdentificationResponse extends ZigBeeRxBase {
 		this.offset = this.GetPosition() - 8;
 	}
 
-	@Override
-	public int GetReceivedDataLength() {
-		return -1;
-	}
-
-	@Override
-	public byte GetReceivedData(int index) {
-		return 0;
-	}
-
-	@Override
-	public int GetReceivedDataOffset() {
-		return -1;
-	}
-
-	@Override
-	public byte[] GetReceivedData() {
-		return null;
-	}
-
-	@Override
 	public ReceiveStatus GetReceiveStatus() {
-		return ReceiveStatus.parse(this.GetFrameData()[11]);
+		return ReceiveStatus.parse(this.GetFrameData()[11] & 0xFF);
 	}
 
-	@Override
 	public Address GetRemoteDevice() {
-		byte[] data = new byte[10];
-		System.arraycopy(this.GetFrameData(), 14, data, 0, 8);
-		data[8] = this.GetFrameData()[12];
-		data[9] = this.GetFrameData()[13];
-		return new Address(data);
+		byte[] cache = new byte[10];
+		System.arraycopy(this.GetFrameData(), 14, cache, 0, 8);
+		cache[8] = this.GetFrameData()[12];
+		cache[9] = this.GetFrameData()[13];
+		return new Address(cache);
 	}
 
 	public Address GetSenderDevice() {
-		byte[] data = new byte[10];
-		System.arraycopy(this.GetFrameData(), 1, data, 0, 10);
-		return new Address(data);
+		byte[] cache = new byte[10];
+		System.arraycopy(this.GetFrameData(), 1, cache, 0, 10);
+		return new Address(cache);
 	}
 
 	public String GetNIString() {
-		return new String(this.GetFrameData(), 22, this.GetReceivedDataLength());
+		int length = this.GetPosition() - 31;
+
+		if (length <= 0)
+			return "";
+
+		return new String(this.GetFrameData(), 22, length);
 	}
 
 	public int GetParentNetworkAddress() {
@@ -64,11 +47,11 @@ public class NodeIdentificationResponse extends ZigBeeRxBase {
 	}
 
 	public DeviceType GetDeviceType() {
-		return DeviceType.parse(this.GetFrameData()[offset + 2]);
+		return DeviceType.parse(this.GetFrameData()[offset + 2] & 0xFF);
 	}
 
 	public SourceEvent GetSourceEvent() {
-		return SourceEvent.parse(this.GetFrameData()[offset + 3]);
+		return SourceEvent.parse(this.GetFrameData()[offset + 3] & 0xFF);
 	}
 
 	public int GetDigiProfileID() {

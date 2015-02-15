@@ -30,7 +30,6 @@ public class ATCommandRequest extends CommandRequestBase {
 			int offset, int length) {
 		super(2 + (parameter == null ? 0 : parameter.length),
 				API_IDENTIFIER.AT_Command, frameID);
-
 		this.SetContent(command.GetValue());
 
 		if (parameter != null)

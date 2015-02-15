@@ -15,9 +15,9 @@ public interface XBeeAPIResponseListener {
 
 	public void onRemoteCommandResponse(RemoteCommandResponse e);
 
-	public void onXBeeIODataSampleRx16Response(XBeeIODataSampleRx16Response e);
+	public void onXBeeIODataSampleRx16Response(XBeeRx16IOSampleResponse e);
 
-	public void onXBeeIODataSampleRx64Response(XBeeIODataSampleRx64Response e);
+	public void onXBeeIODataSampleRx64Response(XBeeRx64IOSampleResponse e);
 
 	public void onXBeeRx16Indicator(XBeeRx16Response e);
 
@@ -29,7 +29,7 @@ public interface XBeeAPIResponseListener {
 
 	public void onZigBeeExplicitRxResponse(ZigBeeExplicitRxResponse e);
 
-	public void onZigBeeIODataSampleRXResponse(ZigBeeIODataSampleRxResponse e);
+	public void onZigBeeIODataSampleRXResponse(ZigBeeIOSampleResponse e);
 
 	public void onZigBeeReceivePacketResponse(ZigBeeRxResponse e);
 

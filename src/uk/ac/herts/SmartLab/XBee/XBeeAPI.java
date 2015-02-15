@@ -3,6 +3,7 @@ package uk.ac.herts.SmartLab.XBee;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import uk.ac.herts.SmartLab.XBee.Device.*;
 import uk.ac.herts.SmartLab.XBee.Options.*;
@@ -10,7 +11,6 @@ import uk.ac.herts.SmartLab.XBee.Response.*;
 import uk.ac.herts.SmartLab.XBee.Type.*;
 
 public class XBeeAPI {
-	private XBeeAPIResponseListener listeners;
 
 	private final byte KEY = 0x7E;
 	private final byte ESCAPED = 0x7D;
@@ -30,6 +30,7 @@ public class XBeeAPI {
 	private int waitFrameID;
 	private API_IDENTIFIER waitFrameType;
 	private final int DEFAULT_WAIT = 10000;
+	private ArrayList<XBeeAPIResponseListener> listeners = new ArrayList<XBeeAPIResponseListener>();
 
 	private boolean isRunning = false;
 	private boolean isChecksum = true;
@@ -47,12 +48,20 @@ public class XBeeAPI {
 	// / <summary>
 	// / get or set whether to verify receive packet's checksum
 	// / </summary>
-	public void setVerifyChecksum(boolean state) {
+	public void SetVerifyChecksum(boolean state) {
 		this.isChecksum = state;
 	}
 
-	public boolean getVerifyChecksum() {
+	public boolean GetVerifyChecksum() {
 		return this.isChecksum;
+	}
+
+	public void AddResponseListener(XBeeAPIResponseListener listener) {
+		this.listeners.add(listener);
+	}
+
+	public void RemoveResponseListener(XBeeAPIResponseListener listener) {
+		this.listeners.remove(listener);
 	}
 
 	// / <summary>
@@ -94,7 +103,7 @@ public class XBeeAPI {
 				WriteByte(request.GetFrameData()[i]);
 
 			WriteByte(request.GetCheckSum());
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -403,8 +412,8 @@ public class XBeeAPI {
 	private void PacketProcess() {
 		if (isChecksum) {
 			if (!response.VerifyChecksum()) {
-				if (this.listeners != null)
-					listeners.onChecksumError(response);
+				for (XBeeAPIResponseListener listener : listeners)
+					listener.onChecksumError(response);
 				return;
 			}
 		}
@@ -423,66 +432,72 @@ public class XBeeAPI {
 			return;
 		}
 
-		if (this.listeners == null)
-			return;
-
 		switch (response.GetFrameType()) {
 		case Rx64_Receive_Packet:
-			listeners.onXBeeRx64Indicator(new XBeeRx64Response(response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onXBeeRx64Indicator(new XBeeRx64Response(response));
 			break;
 		case Rx16_Receive_Packet:
-			listeners.onXBeeRx16Indicator(new XBeeRx16Response(response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onXBeeRx16Indicator(new XBeeRx16Response(response));
 			break;
 		case Rx64_IO_Data_Sample_Rx_Indicator:
-			listeners
-					.onXBeeIODataSampleRx64Response(new XBeeIODataSampleRx64Response(
-							response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onXBeeIODataSampleRx64Response(new XBeeRx64IOSampleResponse(
+						response));
 			break;
 		case Rx16_IO_Data_Sample_Rx_Indicator:
-			listeners
-					.onXBeeIODataSampleRx16Response(new XBeeIODataSampleRx16Response(
-							response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onXBeeIODataSampleRx16Response(new XBeeRx16IOSampleResponse(
+						response));
 			break;
 		case XBee_Transmit_Status:
-			listeners.onXBeeTransmitStatusResponse(new XBeeTxStatusResponse(
-					response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onXBeeTransmitStatusResponse(new XBeeTxStatusResponse(
+						response));
 			break;
 		case AT_Command_Response:
-			listeners.onATCommandResponse(new ATCommandResponse(response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onATCommandResponse(new ATCommandResponse(response));
 			break;
 		case Modem_Status:
-			listeners.onModemStatusResponse(new ModemStatusResponse(response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onModemStatusResponse(new ModemStatusResponse(response));
 			break;
 		case ZigBee_Transmit_Status:
-			listeners
-					.onZigBeeTransmitStatusResponse(new ZigBeeTxStatusResponse(
-							response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onZigBeeTransmitStatusResponse(new ZigBeeTxStatusResponse(
+						response));
 			break;
 		case ZigBee_Receive_Packet:
-			listeners.onZigBeeReceivePacketResponse(new ZigBeeRxResponse(
-					response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onZigBeeReceivePacketResponse(new ZigBeeRxResponse(
+						response));
 			break;
 		case ZigBee_Explicit_Rx_Indicator:
-			listeners.onZigBeeExplicitRxResponse(new ZigBeeExplicitRxResponse(
-					response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onZigBeeExplicitRxResponse(new ZigBeeExplicitRxResponse(
+						response));
 			break;
 		case ZigBee_IO_Data_Sample_Rx_Indicator:
-			listeners
-					.onZigBeeIODataSampleRXResponse(new ZigBeeIODataSampleRxResponse(
-							response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onZigBeeIODataSampleRXResponse(new ZigBeeIOSampleResponse(
+						response));
 			break;
 		case XBee_Sensor_Read_Indicato:
-			listeners
-					.onXBeeSensorReadResponse(new SensorReadResponse(response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onXBeeSensorReadResponse(new SensorReadResponse(
+						response));
 			break;
 		case Node_Identification_Indicator:
-			listeners
-					.onNodeIdentificationResponse(new NodeIdentificationResponse(
-							response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onNodeIdentificationResponse(new NodeIdentificationResponse(
+						response));
 			break;
 		case Remote_Command_Response:
-			listeners.onRemoteCommandResponse(new RemoteCommandResponse(
-					response));
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onRemoteCommandResponse(new RemoteCommandResponse(
+						response));
 			break;
 		case Over_the_Air_Firmware_Update_Status:
 			break;
@@ -491,7 +506,8 @@ public class XBeeAPI {
 		case Many_to_One_Route_Request_Indicator:
 			break;
 		default:
-			listeners.onUndefinedPacket(response);
+			for (XBeeAPIResponseListener listener : listeners)
+				listener.onUndefinedPacket(response);
 			break;
 		}
 	}
@@ -512,6 +528,7 @@ public class XBeeAPI {
 
 					PacketProcess();
 				} catch (Exception e) {
+					e.printStackTrace();
 					break;
 				}
 			}

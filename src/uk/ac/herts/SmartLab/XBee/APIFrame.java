@@ -38,7 +38,7 @@ public class APIFrame {
 	}
 
 	public API_IDENTIFIER GetFrameType() {
-		return API_IDENTIFIER.parse(FrameData[0]);
+		return API_IDENTIFIER.parse(FrameData[0] & 0xFF);
 	}
 
 	// / <summary>
@@ -72,6 +72,7 @@ public class APIFrame {
 
 	public void Rewind() {
 		this.position = 0;
+		this.isVerify = false;
 	}
 
 	// / <summary>
@@ -162,10 +163,10 @@ public class APIFrame {
 		if (isVerify)
 			return true;
 
-		byte temp = 0x00;
+		int temp = 0x00;
 		for (int i = 0; i < this.position; i++)
 			temp += this.FrameData[i];
-		if (temp + this.CheckSum == 0xFF)
+		if (((temp + this.CheckSum) & 0xFF) == 0xFF)
 			isVerify = true;
 		else
 			isVerify = false;
@@ -174,7 +175,10 @@ public class APIFrame {
 	}
 
 	public void CalculateChecksum() {
-		byte CS = 0x00;
+		if (this.isVerify)
+			return;
+		
+		int CS = 0x00;
 		for (int i = 0; i < this.position; i++)
 			CS += this.FrameData[i];
 		this.CheckSum = (byte) (0xFF - CS);

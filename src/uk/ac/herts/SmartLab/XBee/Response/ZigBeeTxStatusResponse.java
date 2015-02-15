@@ -11,7 +11,7 @@ public class ZigBeeTxStatusResponse extends TxStatusBase {
 
 	@Override
 	public DeliveryStatus GetDeliveryStatus() {
-		return DeliveryStatus.parse(this.GetFrameData()[5]);
+		return DeliveryStatus.parse(this.GetFrameData()[5] & 0xFF);
 	}
 
 	public int GetDestinationAddress16() {
@@ -23,6 +23,6 @@ public class ZigBeeTxStatusResponse extends TxStatusBase {
 	}
 
 	public ZigBeeDiscoveryStatus GetDiscoveryStatus() {
-		return ZigBeeDiscoveryStatus.parse(this.GetFrameData()[6]);
+		return ZigBeeDiscoveryStatus.parse(this.GetFrameData()[6] & 0xFF);
 	}
 }

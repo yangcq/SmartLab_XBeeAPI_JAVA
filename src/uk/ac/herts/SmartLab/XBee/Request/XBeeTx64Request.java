@@ -4,7 +4,7 @@ import uk.ac.herts.SmartLab.XBee.Device.Address;
 import uk.ac.herts.SmartLab.XBee.Options.OptionsBase;
 import uk.ac.herts.SmartLab.XBee.Type.API_IDENTIFIER;
 
-public class XBeeTx64Request extends TxRequestBase {
+public class XBeeTx64Request extends TxPayloadBase {
 	// 0x00
 	// FrameID
 	// Destination 64
@@ -34,7 +34,6 @@ public class XBeeTx64Request extends TxRequestBase {
 	public XBeeTx64Request(int frameID, Address remoteAddress,
 			OptionsBase transmitOptions, byte[] payload, int offset, int length) {
 		super(9 + payload.length, API_IDENTIFIER.Tx64_Request, frameID);
-
 		this.SetContent(remoteAddress.GetAddressValue(), 2, 8);
 		this.SetContent(transmitOptions.GetValue());
 		this.SetContent(payload, offset, length);
@@ -60,7 +59,6 @@ public class XBeeTx64Request extends TxRequestBase {
 	// / the ieee 16 bit address is ignored
 	// / </summary>
 	// / <param name="networkAddress"></param>
-
 	@Override
 	public void SetRemoteAddress(Address remoteAddress) {
 		this.SetContent(2, remoteAddress.GetAddressValue(), 2, 8);

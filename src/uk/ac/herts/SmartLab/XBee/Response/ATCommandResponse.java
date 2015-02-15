@@ -9,6 +9,7 @@ public class ATCommandResponse extends CommandResponseBase {
 		super(frame);
 	}
 
+	@Override
 	public ATCommand GetRequestCommand() {
 		return new ATCommand(new byte[] { this.GetFrameData()[2],
 				this.GetFrameData()[3] });
@@ -16,7 +17,7 @@ public class ATCommandResponse extends CommandResponseBase {
 
 	@Override
 	public CommandStatus GetCommandStatus() {
-		return CommandStatus.parse(this.GetFrameData()[4]);
+		return CommandStatus.parse(this.GetFrameData()[4] & 0xFF);
 	}
 
 	// / <summary>
@@ -25,30 +26,28 @@ public class ATCommandResponse extends CommandResponseBase {
 	// / <returns></returns>
 	@Override
 	public byte[] GetParameter() {
-		int len = this.GetParameterLength();
-		if (len > 0) {
-			byte[] data = new byte[len];
-			System.arraycopy(this.GetFrameData(), 5, data, 0, len);
-			return data;
-		} else
+		int length = this.GetParameterLength();
+
+		if (length <= 0)
 			return null;
-	}
 
-	@Override
-	public int GetParameterOffset() {
-		// TODO Auto-generated method stub
-		return 5;
-	}
-
-	@Override
-	public int GetParameterLength() {
-		// TODO Auto-generated method stub
-		return this.GetPosition() - 5;
+		byte[] cache = new byte[length];
+		System.arraycopy(this.GetFrameData(), 5, cache, 0, length);
+		return cache;
 	}
 
 	@Override
 	public byte GetParameter(int index) {
-		// TODO Auto-generated method stub
 		return this.GetFrameData()[5 + index];
+	}
+
+	@Override
+	public int GetParameterLength() {
+		return this.GetPosition() - 5;
+	}
+
+	@Override
+	public int GetParameterOffset() {
+		return 5;
 	}
 }

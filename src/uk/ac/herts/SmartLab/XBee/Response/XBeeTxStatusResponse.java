@@ -10,6 +10,6 @@ public class XBeeTxStatusResponse extends TxStatusBase {
 
 	@Override
 	public DeliveryStatus GetDeliveryStatus() {
-		return DeliveryStatus.parse(this.GetFrameData()[2]);
+		return DeliveryStatus.parse(this.GetFrameData()[2] & 0xFF);
 	}
 }

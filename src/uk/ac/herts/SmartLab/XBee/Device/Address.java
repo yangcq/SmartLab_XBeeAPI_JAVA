@@ -1,6 +1,6 @@
 package uk.ac.herts.SmartLab.XBee.Device;
 
-import uk.ac.herts.SmartLab.XBee.Response.ICommandResponse;
+import uk.ac.herts.SmartLab.XBee.Response.CommandResponseBase;
 
 public class Address {
 	public static final Address BROADCAST_ZIGBEE = new Address(0x00000000,
@@ -96,27 +96,25 @@ public class Address {
 	// / <param name="response">muset be non null parameter</param>
 	// / <returns></returns>
 
-	public static Address Parse(ICommandResponse response) {
-		byte[] message = response.GetParameter();
-		if (message != null)
-			if (response.GetRequestCommand().toString().equalsIgnoreCase("ND")) {
-				Address device = new Address();
+	public static Address Parse(CommandResponseBase response) {
+		if (response == null)
+			return null;
 
-				device.value[0] = message[2];
-				device.value[1] = message[3];
-				device.value[2] = message[4];
-				device.value[3] = message[5];
-				device.value[4] = message[6];
-				device.value[5] = message[7];
-				device.value[6] = message[8];
-				device.value[7] = message[9];
+		if (!response.GetRequestCommand().toString().equalsIgnoreCase("ND"))
+			return null;
 
-				device.value[8] = message[0];
-				device.value[9] = message[1];
+		int length = response.GetParameterLength();
+		if (length <= 0)
+			return null;
 
-				return device;
-			}
-		return null;
+		Address device = new Address();
+
+		System.arraycopy(response.GetFrameData(),
+				response.GetParameterOffset() + 2, device.value, 0, 8);
+		device.value[8] = response.GetParameter(0);
+		device.value[9] = response.GetParameter(1);
+
+		return device;
 	}
 
 	@Override
