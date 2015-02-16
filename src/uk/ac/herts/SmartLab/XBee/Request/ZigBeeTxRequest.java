@@ -11,13 +11,13 @@ public class ZigBeeTxRequest extends TxPayloadBase {
 	// Broadcast_Radius;
 	// TransmitOptions;
 	// RF_Data;
-	public ZigBeeTxRequest(byte frameID, Address remoteAddress,
+	public ZigBeeTxRequest(int frameID, Address remoteAddress,
 			OptionsBase transmitOptions, byte[] payload) {
 		this(frameID, remoteAddress, transmitOptions, payload, 0,
 				payload.length);
 	}
 
-	public ZigBeeTxRequest(byte frameID, Address remoteAddress,
+	public ZigBeeTxRequest(int frameID, Address remoteAddress,
 			OptionsBase transmitOptions, byte[] payload, int offset, int length) {
 		super(12 + payload.length, API_IDENTIFIER.ZigBee_Transmit_Request,
 				frameID);

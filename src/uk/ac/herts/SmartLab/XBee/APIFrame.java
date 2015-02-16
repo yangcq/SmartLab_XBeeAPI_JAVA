@@ -155,7 +155,7 @@ public class APIFrame {
 		return CheckSum;
 	}
 
-	public void SetCheckSum(byte value) {
+	public void SetCheckSum(int value) {
 		this.CheckSum = value;
 	}
 
@@ -177,11 +177,11 @@ public class APIFrame {
 	public void CalculateChecksum() {
 		if (this.isVerify)
 			return;
-		
+
 		int CS = 0x00;
 		for (int i = 0; i < this.position; i++)
 			CS += this.FrameData[i];
-		this.CheckSum = 0xFF - (CS & 0xFF);
+		this.CheckSum = (0xFF - CS) & 0xFF;
 		this.isVerify = true;
 	}
 
@@ -190,5 +190,7 @@ public class APIFrame {
 		this.FrameData = new byte[this.FrameData.length + EXPANDSIZE
 				* (1 + length / EXPANDSIZE)];
 		System.arraycopy(temp, 0, this.FrameData, 0, this.position);
+
+		this.Rewind();
 	}
 }
