@@ -34,7 +34,7 @@ public class IOSamples {
 	}
 
 	public Status GetDigital(Pin pin) {
-		if (this.analog.containsKey(pin))
+		if (this.digital.containsKey(pin))
 			return (Status) digital.get(pin);
 		return null;
 	}
