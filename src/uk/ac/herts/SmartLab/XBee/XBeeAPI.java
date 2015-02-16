@@ -89,20 +89,23 @@ public class XBeeAPI {
 	public void Send(APIFrame request) {
 
 		try {
-			request.CalculateChecksum();
 
-			byte msb = (byte) (request.GetPosition() >> 8);
-			byte lsb = (byte) request.GetPosition();
+			synchronized (this.output) {
+				request.CalculateChecksum();
 
-			_WriteByte(KEY);
+				byte msb = (byte) (request.GetPosition() >> 8);
+				byte lsb = (byte) request.GetPosition();
 
-			WriteByte(msb);
-			WriteByte(lsb);
+				_WriteByte(KEY);
 
-			for (int i = 0; i < request.GetPosition(); i++)
-				WriteByte(request.GetFrameData()[i]);
+				WriteByte(msb);
+				WriteByte(lsb);
 
-			WriteByte(request.GetCheckSum());
+				for (int i = 0; i < request.GetPosition(); i++)
+					WriteByte(request.GetFrameData()[i]);
+
+				WriteByte(request.GetCheckSum());
+			}
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -572,7 +575,7 @@ public class XBeeAPI {
 		return value;
 	}
 
-	private void _WriteByte(byte data) throws IOException {
+	private void _WriteByte(int data) throws IOException {
 		output.write(data);
 	}
 
@@ -580,11 +583,11 @@ public class XBeeAPI {
 	// / write one byte to the payload, which allready handle the escape char
 	// / </summary>
 	// / <param name="data"></param>
-	private void WriteByte(byte data) throws IOException {
+	private void WriteByte(int data) throws IOException {
 		if (mode == APIMode.ESCAPED) {
 			if (data == KEY || data == ESCAPED || data == XON || data == XOFF) {
 				_WriteByte(ESCAPED);
-				_WriteByte((byte) (data ^ 0x20));
+				_WriteByte(data ^ 0x20);
 				return;
 			}
 		}

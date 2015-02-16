@@ -18,7 +18,7 @@ public class APIFrame {
 	// / </summary>
 	private byte[] FrameData;
 
-	private byte CheckSum;
+	private int CheckSum;
 
 	// / <summary>
 	// / a state to indicate whether this packet's checksum is verified while
@@ -151,7 +151,7 @@ public class APIFrame {
 		return this.FrameData;
 	}
 
-	public byte GetCheckSum() {
+	public int GetCheckSum() {
 		return CheckSum;
 	}
 
@@ -181,7 +181,7 @@ public class APIFrame {
 		int CS = 0x00;
 		for (int i = 0; i < this.position; i++)
 			CS += this.FrameData[i];
-		this.CheckSum = (byte) (0xFF - CS);
+		this.CheckSum = 0xFF - (CS & 0xFF);
 		this.isVerify = true;
 	}
 
