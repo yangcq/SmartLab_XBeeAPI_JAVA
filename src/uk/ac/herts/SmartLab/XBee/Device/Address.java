@@ -50,15 +50,17 @@ public class Address {
 	}
 
 	public int GetSerialNumberHigh() {
-		return (value[0] << 24) | (value[1] << 16) | (value[2] << 8) | value[3];
+		return (value[0] & 0xFF) << 24 | (value[1] & 0xFF) << 16
+				| (value[2] & 0xFF) << 8 | value[3] & 0xFF;
 	}
 
 	public int GetSerialNumberLow() {
-		return (value[4] << 24) | (value[5] << 16) | (value[6] << 8) | value[7];
+		return (value[4] & 0xFF) << 24 | (value[5] & 0xFF) << 16
+				| (value[6] & 0xFF) << 8 | value[7] & 0xFF;
 	}
 
 	public int GetNetworkAddress() {
-		return (value[8] << 8) | value[9];
+		return (value[8] & 0xFF) << 8 | value[9] & 0xFF;
 	}
 
 	public void SetSerialNumberHigh(int SerialNumberHigh) {
@@ -95,7 +97,6 @@ public class Address {
 	// / </summary>
 	// / <param name="response">muset be non null parameter</param>
 	// / <returns></returns>
-
 	public static Address Parse(CommandResponseBase response) {
 		if (response == null)
 			return null;
@@ -117,7 +118,6 @@ public class Address {
 		return device;
 	}
 
-	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;

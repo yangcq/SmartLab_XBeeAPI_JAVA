@@ -19,7 +19,7 @@ public class ExplicitAddress extends Address {
 			int NetworkAddress, int SourceEndpoint, int DestinationEndpoint,
 			int ClusterID, int ProfileID) {
 		super(SerialNumberHigh, SerialNumberLow, NetworkAddress);
-		
+
 		ExplicitValue = new byte[6];
 
 		ExplicitValue[0] = (byte) SourceEndpoint;
@@ -41,7 +41,7 @@ public class ExplicitAddress extends Address {
 	}
 
 	public int GetSourceEndpoint() {
-		return ExplicitValue[0];
+		return ExplicitValue[0] & 0xFF;
 	}
 
 	public void SetSourceEndpoint(int SourceEndpoint) {
@@ -49,7 +49,7 @@ public class ExplicitAddress extends Address {
 	}
 
 	public int GetDestinationEndpoint() {
-		return ExplicitValue[1];
+		return ExplicitValue[1] & 0xFF;
 	}
 
 	public void SetDestinationEndpoint(int DestinationEndpoint) {
@@ -57,7 +57,7 @@ public class ExplicitAddress extends Address {
 	}
 
 	public int GetClusterID() {
-		return (ExplicitValue[2] << 8) | ExplicitValue[3];
+		return (ExplicitValue[2] & 0xFF) << 8 | ExplicitValue[3] & 0xFF;
 	}
 
 	public void SetClusterID(int ClusterID) {
@@ -66,7 +66,7 @@ public class ExplicitAddress extends Address {
 	}
 
 	public int GetProfileID() {
-		return (ExplicitValue[4] << 8) | ExplicitValue[5];
+		return (ExplicitValue[4] & 0xFF) << 8 | ExplicitValue[5] & 0xFF;
 	}
 
 	public void SetProfileID(int ProfileID) {
